@@ -1,4 +1,6 @@
 ﻿using System;
+using RelatedVideos.Models;
+using RelatedVideos.Views;
 
 namespace RelatedVideos
 {
@@ -6,7 +8,13 @@ namespace RelatedVideos
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var stream = new VideoStream();
+            FakeVideoRepository.LoadVideos(stream);
+            foreach (var video in stream.Stream)
+            {
+                var related = new Related(stream, video);
+                ShowRelatedVideos.Show(related, video);
+            }
         }
     }
 }

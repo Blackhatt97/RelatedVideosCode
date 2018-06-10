@@ -1,48 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace RelatedVideos.Models
 {
-    public class Related : IVideoStream
+    public class Related
     {
-        public List<Video> RelatedVideosStream { get; set; } = new List<Video>();
-        public int NumberOfRelatedVideos { get; set; }
+        public List<RelatedVideo> RelatedVideosStream { get;}
 
-
-
-
-        // **************************************************************************
-        // IVideoStream Methods
-        // **************************************************************************
-
-            
-        public bool AddVideo(Video video)
+        public Related(VideoStream stream, Video video)
         {
-            if (RelatedVideosStream.Any(v => v.Id == video.Id)) return false;
+            RelatedVideosStream = new List<RelatedVideo>();
+            foreach (var vid in stream.Stream)
+            {
+                if(vid.Id == video.Id || vid.CalculateScore(video) == 0) continue;
+                RelatedVideosStream.Add(new RelatedVideo(vid, video));
+            }
 
-            RelatedVideosStream.Add(video);
-            return true;
-        }
-
-        public int RemoveVideo(Video video)
-        {
-            return RelatedVideosStream.RemoveAll(v => v.Id == video.Id);
-        }
-
-        public int SizeOfStream()
-        {
-            return RelatedVideosStream.Count;
-        }
-
-        public bool ClearStream()
-        {
-            if (RelatedVideosStream.Count == 0) return false;
-
-            RelatedVideosStream.Clear();
-            return true;
+            //RelatedVideosStream.Sort(
+            //    (x,y) => x.Score.CompareTo(y.Score));
+            //RelatedVideosStream.Reverse();
+            RelatedVideosStream = RelatedVideosStream.OrderByDescending(x => x.Score).ToList();
         }
     }
 }
