@@ -1,4 +1,5 @@
 ﻿using System;
+using RelatedVideos.Controllers;
 using RelatedVideos.Models;
 using RelatedVideos.Views;
 
@@ -10,11 +11,15 @@ namespace RelatedVideos
         {
             var stream = new VideoStream();
             FakeVideoRepository.LoadVideos(stream);
+
             foreach (var video in stream.Stream)
             {
-                var related = new Related(stream, video);
-                ShowRelatedVideos.Show(related, video);
-            }
+                var rel = new RelatedController();
+                var size = rel.CreateStream(video, stream);
+                Console.WriteLine(size);
+            } 
+
+
         }
     }
 }

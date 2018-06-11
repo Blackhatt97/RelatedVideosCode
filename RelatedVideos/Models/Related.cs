@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using RelatedVideos.Models.Interfaces;
 
 namespace RelatedVideos.Models
 {
-    public class Related
+    public class Related : IVideoStream
     {
         public List<RelatedVideo> RelatedVideosStream { get;}
 
@@ -20,6 +21,29 @@ namespace RelatedVideos.Models
             //    (x,y) => x.Score.CompareTo(y.Score));
             //RelatedVideosStream.Reverse();
             RelatedVideosStream = RelatedVideosStream.OrderByDescending(x => x.Score).ToList();
+        }
+
+        public bool AddVideo(Video video)
+        {
+            return false;
+        }
+
+        public int RemoveVideo(Video video)
+        {
+            return RelatedVideosStream.RemoveAll(v => v.Video.Id == video.Id);
+        }
+
+        public int SizeOfStream()
+        {
+            return RelatedVideosStream.Count;
+        }
+
+        public bool ClearStream()
+        {
+            if (RelatedVideosStream.Count == 0) return false;
+
+            RelatedVideosStream.Clear();
+            return true;
         }
     }
 }
